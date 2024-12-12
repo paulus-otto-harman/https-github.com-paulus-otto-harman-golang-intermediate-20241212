@@ -1,0 +1,523 @@
+basePath: /
+definitions:
+  domain.Banner:
+    properties:
+      endDate:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      isPublish:
+        type: boolean
+      pathPage:
+        type: string
+      startDate:
+        type: string
+      title:
+        type: string
+    type: object
+  domain.Promotion:
+    properties:
+      description:
+        type: string
+      endDate:
+        type: string
+      id:
+        type: integer
+      isPublish:
+        type: boolean
+      limit:
+        type: integer
+      name:
+        type: string
+      startDate:
+        type: string
+      status:
+        $ref: '#/definitions/domain.status'
+      type:
+        $ref: '#/definitions/domain.Type'
+      voucherCode:
+        type: string
+    type: object
+  domain.Type:
+    enum:
+    - Voucher Code
+    - Direct Discount
+    type: string
+    x-enum-varnames:
+    - Voucher
+    - Discount
+  domain.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        example: admin@mail.com
+        type: string
+      full_name:
+        type: string
+      password:
+        example: password
+        type: string
+      role:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.status:
+    enum:
+    - Active
+    - Inactive
+    type: string
+    x-enum-varnames:
+    - Active
+    - Inactive
+  handler.Response:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: lumoshive.academy@gmail.com
+    name: Team-1
+    url: https://academy.lumoshive.com/contact-us
+  description: Nothing.
+  license:
+    name: Lumoshive Academy
+    url: https://academy.lumoshive.com
+  termsOfService: http://example.com/terms/
+  title: Ecommerce Dashboard API
+  version: "1.0"
+paths:
+  /banner:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint Fetch All Banner
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get All Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/domain.Banner'
+                  type: array
+              type: object
+        "500":
+          description: server error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Get All Banner
+      tags:
+      - GetAllBanner
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: authenticate user
+      parameters:
+      - description: ' '
+        in: body
+        name: domain.User
+        required: true
+        schema:
+          $ref: '#/definitions/domain.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: user authenticated
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "401":
+          description: invalid username and/or password
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: server error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: User login
+      tags:
+      - Auth
+  /orders:
+    get:
+      consumes:
+      - application/json
+      description: Get customer orders
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: orders retrieved
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "404":
+          description: no data found
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: server error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Customer orders
+      tags:
+      - Order
+  /orders/:id:
+    get:
+      consumes:
+      - application/json
+      description: Get customer order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: order retrived
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "404":
+          description: no data found
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "422":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: server error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Customer order
+      tags:
+      - Order
+    put:
+      consumes:
+      - application/json
+      description: Update customer order
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: order updated
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "404":
+          description: no data found
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "422":
+          description: invalid input
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: server error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Customer order
+      tags:
+      - Order
+  /password-reset:
+    post:
+      consumes:
+      - application/json
+      description: request password reset
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: password reset link sent
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: failed to reset password
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Password Reset
+      tags:
+      - Auth
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Get All Products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully Retrieved Products
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "404":
+          description: Product Not Found
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: server error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Show all Products
+      tags:
+      - Products
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new product with variants and images
+      parameters:
+      - description: Product Name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Product SKU
+        in: formData
+        name: sku_product
+        required: true
+        type: string
+      - description: Product Price
+        in: formData
+        name: price
+        required: true
+        type: integer
+      - description: Product Description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Product Images
+        in: formData
+        name: images
+        required: true
+        type: file
+      - description: Product Variants in JSON format
+        in: formData
+        name: variants
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Product created successfully
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "400":
+          description: Invalid form data
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Failed to create product
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Create Product
+      tags:
+      - Products
+  /products/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product Deleted successfully
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "404":
+          description: Failed to Delete product
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Delete Product
+      tags:
+      - Products
+    get:
+      consumes:
+      - application/json
+      description: Get Product By ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully Retrieved Product
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "404":
+          description: Product Not Found
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Get Product By ID
+      tags:
+      - Products
+  /products/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update the details of a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product Name
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: Product SKU
+        in: body
+        name: sku_product
+        required: true
+        schema:
+          type: string
+      - description: Product Price
+        in: body
+        name: price
+        required: true
+        schema:
+          type: integer
+      - description: Product Description
+        in: body
+        name: description
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product Updated successfully
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "400":
+          description: Failed to Update product
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Invalid Payload Request
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Update Product
+      tags:
+      - Products
+  /promotion:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint Fetch All Promotion
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get All Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/domain.Promotion'
+                  type: array
+              type: object
+        "500":
+          description: server error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Get All Promotion
+      tags:
+      - GetAllPromotion
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: register staff
+      parameters:
+      - description: ' '
+        in: body
+        name: domain.User
+        required: true
+        schema:
+          $ref: '#/definitions/domain.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: login successfully
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: server error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Staff Registration
+      tags:
+      - Auth
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: email must be valid when users want to reset their passwords
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: email is valid
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "404":
+          description: user not found
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Check Email
+      tags:
+      - Auth
+schemes:
+- http
+securityDefinitions:
+  token:
+    in: header
+    name: token
+    type: apiKey
+swagger: "2.0"
